@@ -34,24 +34,18 @@ public class Main {
 
     // 최단 거리가 k 인 도시 출력
     static void solution() {
-        ArrayList<Integer> result = new ArrayList<>();
         boolean flag = false;
 
         for (int i = 1; i <= n; i++) {
             if (dis[i] == k) {
-                result.add(i);
+                System.out.println(i);
                 flag = true;
             }
         }
 
-        if (flag) {
-            for (int x : result) {
-                System.out.println(x);
-            }
-        } else {
-            System.out.print(-1);
+        if (!flag) {
+            System.out.println(-1);
         }
-
     }
 
     public static void main(String[] args) throws IOException {
