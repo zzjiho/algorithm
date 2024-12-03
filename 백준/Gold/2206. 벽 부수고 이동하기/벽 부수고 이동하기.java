@@ -5,6 +5,7 @@ import java.util.*;
 
 class Point {
     int x, y, wall;
+    
     Point(int x, int y, int wall) {
         this.x = x;
         this.y = y;
@@ -20,7 +21,7 @@ public class Main {
     static int[] dy = {0, 1, 0, -1};
 
     // 1. 벽을 부수지 않고 이동한 경우, 2. 벽을 부수고 이동한 경우를 구분한다.
-    // 같은 위치라도 벽을 부순 여부에 따라 이후 이동 가능성이 달라지므로, 방문 여부와 거리를 각각 관리해야 함..
+    // 같은 위치라도 벽을 부순 여부에 따라 최단거리가 달라 질 수 있으므로, 방문 여부와 거리를 각각 관리해야 함..
     static void BFS() {
         Queue<Point> Q = new LinkedList<>();
         Q.offer(new Point(0, 0, 0));
@@ -40,18 +41,26 @@ public class Main {
                 int wall = tmp.wall;
 
                 if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
-                    // 갈 수 있는 경로 && 벽 안 부순 상태로 방문한 적이 있니?
-                    if (board[nx][ny] == 0 && dis[nx][ny][wall] == 0) {
+                    // 이미 해당 상태로 방문한 적이 있으면 패스
+                    if (dis[nx][ny][wall] != 0) {
+                        continue;
+                    }
+
+                    // 다음 위치가 빈 공간인 경우
+                    if (board[nx][ny] == 0) {
                         dis[nx][ny][wall] = dis[tmp.x][tmp.y][wall] + 1;
                         Q.offer(new Point(nx, ny, wall));
-
-                    // 다음 위치가 벽 && 아직 벽을 부순 적이 없음 && 벽을 한 번 부순 상태로 방문한 적이 있니?
-                    } else if (board[nx][ny] == 1 && wall == 0 && dis[nx][ny][1] == 0) {
-                        // 벽을 부수고 이동
-                        dis[nx][ny][1] = dis[tmp.x][tmp.y][wall] + 1;
-                        Q.offer(new Point(nx, ny, 1));
+                    }
+                    // 다음 위치가 벽인 경우
+                    else if (board[nx][ny] == 1) {
+                        // 벽을 부순 적이 없을 때만 벽을 부수고 이동 가능
+                        if (wall == 0) {
+                            dis[nx][ny][1] = dis[tmp.x][tmp.y][wall] + 1;
+                            Q.offer(new Point(nx, ny, 1));
+                        }
                     }
                 }
+
             }
         }
 
