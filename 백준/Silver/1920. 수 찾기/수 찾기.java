@@ -1,31 +1,32 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    static void solution(HashMap<Integer, Integer> hm1, int[] ar) {
+    static void solution(HashSet<Integer> set, int[] ar) {
+        StringBuilder sb = new StringBuilder();
         for (int x : ar) {
-            if (hm1.containsKey(x)) {
-                System.out.println(1);
+            if (set.contains(x)) {
+                sb.append("1").append("\n");
             } else {
-                System.out.println(0);
+                sb.append("0").append("\n");
             }
         }
+        System.out.print(sb);
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        HashMap<Integer, Integer> hm1 = new HashMap<>();
+        HashSet<Integer> set = new HashSet<>();
 
         int n = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) {
-            int num = Integer.parseInt(st.nextToken());
-            hm1.put(num, hm1.getOrDefault(num, 0) + 1);
+            set.add(Integer.parseInt(st.nextToken()));
         }
 
         int m = Integer.parseInt(br.readLine());
@@ -35,6 +36,6 @@ public class Main {
             ar[i] = Integer.parseInt(st.nextToken());
         }
 
-        solution(hm1, ar);
+        solution(set, ar);
     }
 }
