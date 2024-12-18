@@ -1,14 +1,16 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 class Main {
 
-    static int n; // 노드 수
-    static int m; // 간선 수
-    static ArrayList<Integer>[] graph;
+    static int n, m, cnt;
     static boolean[] visited;
-    static int cnt;
+    static ArrayList<Integer>[] graph;
 
-    public void DFS(int v) {
+    static void DFS(int v) {
         visited[v] = true;
 
         for (int adj : graph[v]) {
@@ -19,28 +21,28 @@ class Main {
         }
     }
 
-    public static void main(String[] args) {
-        Main T = new Main();
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        visited = new boolean[n + 1];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
+        m = Integer.parseInt(br.readLine());
 
         graph = new ArrayList[n + 1];
+        visited = new boolean[n + 1];
+
         for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
 
-        // 간선 정보 세팅 및 그래프 구성
+        // 간선 세팅
         for (int i = 0; i < m; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
             graph[a].add(b);
             graph[b].add(a);
         }
 
-        T.DFS(1);
+        DFS(1);
         System.out.println(cnt);
     }
 }
