@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 class Main {
@@ -6,7 +9,7 @@ class Main {
     static ArrayList<Integer>[] graph;
     static boolean[] visited;
 
-    public void DFS(int v) {
+    static void DFS(int v) {
         visited[v] = true;
         System.out.print(v + " ");
 
@@ -17,7 +20,7 @@ class Main {
         }
     }
 
-    public void BFS(int v) {
+    static void BFS(int v) {
         Queue<Integer> Q = new LinkedList<>();
         visited[v] = true;
         Q.offer(v);
@@ -35,47 +38,38 @@ class Main {
         }
     }
 
-    public static void main(String[] args) {
-        Main T = new Main();
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-        v = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        v = Integer.parseInt(st.nextToken());
 
-        graph = new ArrayList[n + 1];
+        graph = new ArrayList[n+1];
+
         for (int i = 1; i <= n; i++) {
             graph[i] = new ArrayList<>();
         }
 
-        // 간선 정보 세팅 및 그래프 구성
+        // 간선 세팅
         for (int i = 0; i < m; i++) {
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken()); 
+            int b = Integer.parseInt(st.nextToken()); 
             graph[a].add(b);
             graph[b].add(a);
         }
 
-        // 인접 리스트에 추가되는 정점들은 입력 순서대로 저장되니,
-        // 문제 요구사항에 맞게 정점 번호를 작은 순서대로 정렬해야함
+        // 오름차순 정렬
         for (int i = 1; i <= n; i++) {
             Collections.sort(graph[i]);
         }
 
-        // DFS 실행
-        visited = new boolean[n + 1];
-        T.DFS(v);
+        visited = new boolean[n+1];
+        DFS(v);
         System.out.println();
 
-        // BFS 실행
-        visited = new boolean[n + 1]; // 다시 초기화
-        T.BFS(v);
+        visited = new boolean[n+1];
+        BFS(v);
     }
 }
-
-
-
-
-
-
-
