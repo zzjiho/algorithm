@@ -14,74 +14,71 @@ class Point {
     }
 }
 
-public class Main {
+class Main {
 
-    static int l;
+    static int t, l;
+    static int a, b, c, d;
     static int[][] board;
     static int[][] dis;
-    static int[] dx = {-1, -2, -2, -1, 1, 2, 2, 1}; // 나이트 이동경로
-    static int[] dy = {-2, -1, 1, 2, 2, 1, -1, -2};
 
-    // 이동하려는 좌표까지 누가 제일 빨리 도달해 ?
-    // 그때의 거리는 몇이야 ?
-    static void BFS(Queue<Point> Q, int c, int d) {
-        int answer = 0;
+    // 나이트 이동 범위
+    static int[] dx = {-2, -1, 1, 2, 2, 1, -1, -2};
+    static int[] dy = {-1, -2, -2, -1, 1, 2, 2, 1};
+
+    static void BFS() {
+        Queue<Point> Q = new LinkedList<>();
+        Q.offer(new Point(a, b));
+        board[a][b] = 1;
 
         while (!Q.isEmpty()) {
             Point tmp = Q.poll();
 
+            if (tmp.x == c && tmp.y == d) {
+                return;
+            }
+
             for (int i = 0; i < 8; i++) {
                 int nx = dx[i] + tmp.x;
                 int ny = dy[i] + tmp.y;
-
-                // 바운더리내 이동 가능 경로
-                if (nx >= 0 && nx < l && ny >= 0 && ny < l && board[nx][ny] == 0) {
-                    board[nx][ny] = 1; // 이동 표시
-                    dis[nx][ny] = dis[tmp.x][tmp.y] + 1;
-                    Q.offer(new Point(nx, ny));
-
-                    if (nx == c && ny == d) {
-                        answer = dis[nx][ny];
+                // 바운더리내 갈 수 있는 경로
+                if (nx >= 0 && nx < l && ny >= 0 && ny < l) {
+                    if (board[nx][ny] == 0) {
+                        board[nx][ny] = 1; 
+                        dis[nx][ny] = dis[tmp.x][tmp.y] + 1;
+                        Q.offer(new Point(nx, ny));
                     }
                 }
             }
         }
-
-        System.out.println(answer);
     }
 
-    // 최단거리가 필요하니 BFS 를 사용한다.
-    // 나이트가 갈 수 있는 경로를 좌표로 표현하고 for문을 돌리기
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int test = Integer.parseInt(st.nextToken());
+        t = Integer.parseInt(br.readLine());
 
-        for (int t = 0; t < test; t++) {
-            Queue<Point> Q = new LinkedList<>();
-
-            st = new StringTokenizer(br.readLine());
-            l = Integer.parseInt(st.nextToken());
+        for (int test = 0; test < t; test++) {
+            l = Integer.parseInt(br.readLine());
             board = new int[l][l];
             dis = new int[l][l];
 
-            // 체스 현재 위치 Q에 담기
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            Q.offer(new Point(a, b));
+            // 나이트 현재 칸
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            a = Integer.parseInt(st.nextToken());
+            b = Integer.parseInt(st.nextToken());
 
+            // 목적지 칸
             st = new StringTokenizer(br.readLine());
-            int c = Integer.parseInt(st.nextToken());
-            int d = Integer.parseInt(st.nextToken());
+            c = Integer.parseInt(st.nextToken());
+            d = Integer.parseInt(st.nextToken());
 
-            // 나이트 현재 위치 == 이동 위치 일때
+            // 시작점과 목표점이 같으면 이동 횟수는 0
             if (a == c && b == d) {
                 System.out.println(0);
                 continue;
             }
 
-            BFS(Q, c, d);
+            BFS();
+            System.out.println(dis[c][d]);
         }
     }
 }
