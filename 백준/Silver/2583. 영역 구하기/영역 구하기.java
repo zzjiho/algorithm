@@ -1,74 +1,81 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 class Main {
 
-    static int m; // 행
-    static int n; // 열
-    static int k; // 개의 직사각형을 그린다.
+    static int m, n;
+    static int k; 
     static int[][] board;
-    static int size;
-    static ArrayList<Integer> result;
+    static boolean[][] visited;
+    static int area;
+    static int cnt;
+    static ArrayList<Integer> answer = new ArrayList<>();
+
     static int[] dx = {-1, 0, 1, 0};
     static int[] dy = {0, 1, 0, -1};
 
-    public static void DFS(int y, int x) {
-        board[y][x] = 1; // 방문처리
-
+    static void dfs(int x, int y) {
+        visited[x][y] = true;
         for (int i = 0; i < 4; i++) {
             int nx = dx[i] + x;
             int ny = dy[i] + y;
-
-            if (nx >= 0 && nx < n && ny >= 0 && ny < m && board[ny][nx] == 0) {
-                size++;
-                DFS(ny, nx);
+            // 바운더리 내 갈 수 있는 경로
+            if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                if (!visited[nx][ny] && board[nx][ny] != 1) {
+                    cnt++;
+                    dfs(nx, ny);
+                }
             }
         }
     }
 
-    public static void main(String[] args) {
-        Main T = new Main();
-        Scanner sc = new Scanner(System.in);
-        m = sc.nextInt(); // 5
-        n = sc.nextInt(); // 7
-        k = sc.nextInt(); // 3
-        board = new int[m][n];
-        result = new ArrayList<>();
-
-        for (int i = 0; i < k; i++) {
-            int x1 = sc.nextInt();
-            int y1 = sc.nextInt();
-            int x2 = sc.nextInt();
-            int y2 = sc.nextInt();
-
-            for (int y = y1; y < y2; y++) {
-                for (int x = x1; x < x2; x++) {
-                    board[y][x] = 1; // 직사각형 칠하기
-                }
-            }
-        }
-
-        // 영역 탐색
+    static void solution() {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (board[i][j] == 0) {
-                    size = 1;
-                    DFS(i, j);
-                    // 한 영역 색칠 다 하고 DFS 종료 후 여기로
-                    result.add(size);
+                if (!visited[i][j] && board[i][j] != 1) {
+                    area++;
+                    cnt = 1;
+                    dfs(i, j);
+                    answer.add(cnt);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        m = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken()); 
+        k = Integer.parseInt(st.nextToken()); 
+        board = new int[m][n];
+        visited = new boolean[m][n];
+
+        for (int i = 0; i < k; i++) {
+            st = new StringTokenizer(br.readLine());
+            int x1 = Integer.parseInt(st.nextToken()); 
+            int y1 = Integer.parseInt(st.nextToken()); 
+            int x2 = Integer.parseInt(st.nextToken()); 
+            int y2 = Integer.parseInt(st.nextToken());
+
+            for (int j = y1; j < y2; j++) {
+                for (int k = x1; k < x2; k++) {
+                    board[j][k] = 1;
                 }
             }
         }
 
-        Collections.sort(result);
+        solution();
 
-        StringBuilder sb = new StringBuilder();
+        System.out.println(area);
 
-        sb.append(result.size() + "\n");
-        for (int x : result) {
-            sb.append(x + " ");
+        Collections.sort(answer);
+        for (int x : answer) {
+            System.out.print(x + " ");
         }
-        System.out.println(sb);
     }
 }
